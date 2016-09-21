@@ -29,6 +29,9 @@ namespace Alb
             // Add framework services.
             services.AddMvc();
 
+            // Add CORS
+            services.AddCors();
+
             // Swagger
             services.AddSwaggerGen();
 
@@ -42,6 +45,13 @@ namespace Alb
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(builder => 
+                builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+            );
 
             app.UseMvc();
 
