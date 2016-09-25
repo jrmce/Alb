@@ -32,7 +32,7 @@ namespace Alb.Models
             return _conn.Query<Album>("SELECT * FROM albums WHERE id = @AlbumId", new { AlbumID = id }).FirstOrDefault();
         }
 
-        public IEnumerable<Album> FindAll()
+        public virtual IEnumerable<Album> FindAll(int id)
         {
             return _conn.Query<Album>("SELECT * FROM albums");
         }

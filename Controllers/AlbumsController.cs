@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Alb.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/albums")]
     public class AlbumsController : Controller
     {
         private IResourceRepository<Album> _albumsRepo;

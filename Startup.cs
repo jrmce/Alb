@@ -38,6 +38,7 @@ namespace Alb
             services.Configure<DatabaseSettings>(Configuration.GetSection("Database"));
             services.AddSingleton<IConnection, Connection>();
             services.AddScoped<IResourceRepository<Album>, AlbumRepository>();
+            services.AddScoped<IResourceRepository<Photo>, PhotoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
