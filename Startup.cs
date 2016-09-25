@@ -1,5 +1,5 @@
 using Alb.Database;
-using Alb.Models;
+using Alb.Models.Repositories;
 using Alb.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,8 +37,8 @@ namespace Alb
 
             services.Configure<DatabaseSettings>(Configuration.GetSection("Database"));
             services.AddSingleton<IConnection, Connection>();
-            services.AddScoped<IResourceRepository<Album>, AlbumRepository>();
-            services.AddScoped<IResourceRepository<Photo>, PhotoRepository>();
+            services.AddScoped<IAlbumRepository, AlbumRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,27 +1,26 @@
 using System.Collections.Generic;
 using Alb.Models;
+using Alb.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alb.Controllers
 {
-    [Route("api/albums/{albumId:int}/photos")]
+    [Route("api/[controller]")]
     public class PhotosController : Controller
     {
-        private IResourceRepository<Photo> _photosRepo;
-        public PhotosController(IResourceRepository<Photo> photosRepo)
+        private IPhotoRepository _photosRepo;
+        public PhotosController(IPhotoRepository photosRepo)
         {
             _photosRepo = photosRepo;
         }
         
-        // GET api/albums/1/photos
         [HttpGet]
         [Produces("application/json", Type = typeof(IEnumerable<Album>))]
-        public IEnumerable<Photo> GetPhotos(int albumId)
+        public IEnumerable<Photo> GetPhotos()
         {
-            return _photosRepo.FindAll(albumId);
+            return _photosRepo.FindAll();
         }
 
-        // GET api/albums/1/photos/2
         [HttpGet("{id:int}")]
         [Produces("application/json", Type = typeof(Photo))]
         public IActionResult GetPhoto(int id)
@@ -35,7 +34,6 @@ namespace Alb.Controllers
             return Json(photo);
         }
 
-        // POST api/albums/1/photos
         [HttpPost]
         [Produces("application/json", Type = typeof(Photo))]
         [Consumes("application/json")]
@@ -51,7 +49,6 @@ namespace Alb.Controllers
             return CreatedAtAction("Get", new { id = created }, _photosRepo.Find(created));
         }
 
-        // PUT api/albums/5/photos/1
         [HttpPut("{id:int}")]
         [Produces("application/json", Type = typeof(Photo))]
         public IActionResult Put(int id, [FromBody]Photo photo)
@@ -64,7 +61,6 @@ namespace Alb.Controllers
             return Json(_photosRepo.Update(id, photo));
         }
 
-        // DELETE api/albums/5/photos/2
         [HttpDelete("{id:int}")]
         [Produces("application/json")]
         public IActionResult Delete(int id)

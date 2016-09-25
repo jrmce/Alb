@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace Alb.Models
+namespace Alb.Models.Repositories
 {
     public interface IResourceRepository<T>
     {
-        IEnumerable<T> FindAll(int id = 0);
+        IEnumerable<T> FindAll();
         T Find(int id);
         int Create(T resource);
         void Delete(int id);
