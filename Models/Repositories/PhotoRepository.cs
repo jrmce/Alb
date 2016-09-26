@@ -21,7 +21,7 @@ namespace Alb.Models.Repositories
                 VALUES (@Filename) 
                 RETURNING id";
 
-            var id = _conn.Query<int>(sql, new { Title = photo.Filename }).First();
+            var id = _conn.Query<int>(sql, new { Filename = photo.Filename }).First();
             return id;
         }
 
@@ -59,7 +59,7 @@ namespace Alb.Models.Repositories
                 UPDATE photos 
                 SET filename = @Filename 
                 WHERE id = @Id";
-                
+
             _conn.Execute(sql, new { Filename = photo.Filename, Id = id });
             return Find(id);
         }

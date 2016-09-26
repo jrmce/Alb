@@ -39,6 +39,7 @@ namespace Alb
             services.AddSingleton<IConnection, Connection>();
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddScoped<IAlbumsPhotosRepository, AlbumsPhotosRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

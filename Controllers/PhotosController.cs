@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Alb.Models;
 using Alb.Models.Repositories;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alb.Controllers
@@ -9,9 +13,16 @@ namespace Alb.Controllers
     public class PhotosController : Controller
     {
         private IPhotoRepository _photosRepo;
-        public PhotosController(IPhotoRepository photosRepo)
+        private IAlbumsPhotosRepository _albumsPhotosRepo;
+        private IHostingEnvironment _hostingEnv;
+        public PhotosController(
+            IPhotoRepository photosRepo, 
+            IHostingEnvironment hostingEnv,
+            IAlbumsPhotosRepository albumsPhotosRepo)
         {
             _photosRepo = photosRepo;
+            _hostingEnv = hostingEnv;
+            _albumsPhotosRepo = albumsPhotosRepo;
         }
         
         [HttpGet]
@@ -36,17 +47,60 @@ namespace Alb.Controllers
 
         [HttpPost]
         [Produces("application/json", Type = typeof(Photo))]
-        [Consumes("application/json")]
-        public IActionResult Post([FromBody]Photo photo)
+        [Consumes("multipart/form-data")]
+        public IActionResult UploadPhotos()
         {
-            if (!ModelState.IsValid)
+            var files = Request.Form.Files;
+            string albumId = null;
+
+            if (Request.Form.ContainsKey("albumId"))
             {
-                return BadRequest(ModelState);
+                albumId = Request.Form["albumId"];
+            }
+            
+            var createdPhotos = new List<Photo>();
+
+            foreach (var file in files)
+            {
+                var ext = System.IO.Path.GetExtension(file.FileName);
+                var guid = Guid.NewGuid();
+                var filename = $"{guid}{ext}";
+                var path = $"{_hostingEnv.ContentRootPath}/uploads";
+                var newFile = $"{path}/{filename}";
+                
+                using (FileStream fs = System.IO.File.Create(newFile))
+                {
+                    file.CopyTo(fs);
+                    fs.Flush();
+                }
+
+                var photo = new Photo()
+                {
+                    Filename = filename
+                };
+
+                photo.Id = _photosRepo.Create(photo);
+                createdPhotos.Add(photo);
             }
 
-            var created = _photosRepo.Create(photo);
-            
-            return CreatedAtAction("Get", new { id = created }, _photosRepo.Find(created));
+            if (!string.IsNullOrEmpty(albumId))
+            {
+                var albumsPhotos = new List<AlbumsPhotos>();
+
+                createdPhotos.ForEach(photo => {
+                    albumsPhotos.Add(new AlbumsPhotos()
+                    {
+                        AlbumId = Int32.Parse(albumId),
+                        PhotoId = photo.Id
+                    });
+                });
+
+                albumsPhotos.ForEach(ap => {
+                    _albumsPhotosRepo.Create(ap);
+                });
+            }
+
+            return Json(createdPhotos);
         }
 
         [HttpPut("{id:int}")]
