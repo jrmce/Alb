@@ -71,16 +71,16 @@ namespace Alb.Models.Repositories
             return Find(id);
         }
 
-        public IEnumerable<Photo> FindAllPhotos(int id)
+        public IEnumerable<int> FindAllPhotos(int id)
         {
             var sql = @"
-                SELECT photos.* 
+                SELECT photos.id
                 FROM photos
                 JOIN albums_photos
                 ON photos.id = albums_photos.photo_id 
                 AND albums_photos.album_id = @AlbumId";
 
-            return _conn.Query<Photo>(sql, new { AlbumId = id });
+            return _conn.Query<int>(sql, new { AlbumId = id });
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -17,11 +18,11 @@ namespace Alb.Models.Repositories
         public int Create(Photo photo)
         {
             var sql = @"
-                INSERT INTO photos (filename) 
-                VALUES (@Filename) 
+                INSERT INTO photos (size, type, data) 
+                VALUES (@Size, @Type, @Data) 
                 RETURNING id";
 
-            var id = _conn.Query<int>(sql, new { Filename = photo.Filename }).First();
+            var id = _conn.Query<int>(sql, new { Size = photo.Size, Type = photo.Type, Data = photo.Data }).First();
             return id;
         }
 
@@ -55,13 +56,14 @@ namespace Alb.Models.Repositories
 
         public Photo Update(int id, Photo photo)
         {
-            var sql = @"
-                UPDATE photos 
-                SET filename = @Filename 
-                WHERE id = @Id";
+            throw new NotImplementedException();
+            // var sql = @"
+            //     UPDATE photos 
+            //     SET filename = @Filename 
+            //     WHERE id = @Id";
 
-            _conn.Execute(sql, new { Filename = photo.Filename, Id = id });
-            return Find(id);
+            // _conn.Execute(sql, new { Filename = photo.Filename, Id = id });
+            // return Find(id);
         }
     }
 }

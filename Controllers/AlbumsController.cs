@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Alb.Models;
 using Alb.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,13 @@ namespace Alb.Controllers
     public class AlbumsController : Controller
     {
         private IAlbumRepository _albumsRepo;
-        public AlbumsController(IAlbumRepository albumsRepo)
+        private IAlbumsPhotosRepository _albumsPhotosRepo;
+        public AlbumsController(
+            IAlbumRepository albumsRepo,
+            IAlbumsPhotosRepository albumsPhotoRepo)
         {
             _albumsRepo = albumsRepo;
+            _albumsPhotosRepo = albumsPhotoRepo;
         }
         
         [HttpGet]
@@ -45,6 +50,17 @@ namespace Alb.Controllers
             }
 
             var created = _albumsRepo.Create(album);
+
+            if (album.Photos.Any())
+            {
+                foreach(int photo in album.Photos)
+                {
+                    _albumsPhotosRepo.Create(new AlbumsPhotos() {
+                        AlbumId = created,
+                        PhotoId = photo
+                    });
+                }
+            }
             
             return CreatedAtAction("Get", new { id = created }, _albumsRepo.Find(created));
         }

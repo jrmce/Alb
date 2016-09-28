@@ -4,6 +4,6 @@ namespace Alb.Models.Repositories
 {
     public interface IAlbumRepository : IResourceRepository<Album>
     {
-        IEnumerable<Photo> FindAllPhotos(int id);
+        IEnumerable<int> FindAllPhotos(int id);
     }
 }

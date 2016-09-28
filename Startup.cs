@@ -34,7 +34,7 @@ namespace Alb
         {
             // Add framework services.
             services.AddMvc();
-
+            
             // Add CORS
             services.AddCors();
 
@@ -42,7 +42,7 @@ namespace Alb
             services.AddSwaggerGen();
 
             services.Configure<DatabaseSettings>(Configuration.GetSection("Database"));
-            services.AddSingleton<IConnection, Connection>();
+            services.AddScoped<IConnection, Connection>();
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<IAlbumsPhotosRepository, AlbumsPhotosRepository>();
