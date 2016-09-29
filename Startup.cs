@@ -54,13 +54,6 @@ namespace Alb
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), @"uploads")),
-                RequestPath = new PathString("/images")
-            });
-
             app.UseCors(builder => 
                 builder
                     .AllowAnyMethod()
