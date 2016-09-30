@@ -15,7 +15,7 @@ namespace Alb.Models.Repositories
             _conn = connection.Conn;
         }
 
-        public int Create(Photo photo)
+        public int Create(CreatePhoto photo)
         {
             var sql = @"
                 INSERT INTO photos (size, type, data) 
@@ -48,7 +48,7 @@ namespace Alb.Models.Repositories
         public IEnumerable<Photo> FindAll()
         {
             var sql = @"
-                SELECT * 
+                SELECT id, type, size 
                 FROM photos";
 
             return _conn.Query<Photo>(sql);

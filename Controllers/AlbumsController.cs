@@ -9,13 +9,13 @@ namespace Alb.Controllers
     [Route("api/[controller]")]
     public class AlbumsController : Controller
     {
-        private IAlbumRepository _albumsRepo;
+        private IAlbumRepository _albumRepo;
         private IAlbumsPhotosRepository _albumsPhotosRepo;
         public AlbumsController(
-            IAlbumRepository albumsRepo,
+            IAlbumRepository albumRepo,
             IAlbumsPhotosRepository albumsPhotoRepo)
         {
-            _albumsRepo = albumsRepo;
+            _albumRepo = albumRepo;
             _albumsPhotosRepo = albumsPhotoRepo;
         }
         
@@ -23,14 +23,14 @@ namespace Alb.Controllers
         [Produces("application/json", Type = typeof(IEnumerable<Album>))]
         public IEnumerable<Album> Get()
         {
-            return _albumsRepo.FindAll();
+            return _albumRepo.FindAll();
         }
 
         [HttpGet("{id:int}")]
         [Produces("application/json", Type = typeof(Album))]
         public IActionResult Get(int id)
         {
-            var album = _albumsRepo.Find(id);
+            var album = _albumRepo.Find(id);
 
             if (album == null) {
                 return NotFound();
@@ -40,16 +40,16 @@ namespace Alb.Controllers
         }
 
         [HttpPost]
-        [Produces("application/json", Type = typeof(Album))]
+        [Produces("application/json", Type = typeof(CreateAlbum))]
         [Consumes("application/json")]
-        public IActionResult Post([FromBody]Album album)
+        public IActionResult Post([FromBody]CreateAlbum album)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var created = _albumsRepo.Create(album);
+            var created = _albumRepo.Create(album);
 
             if (album.Photos.Any())
             {
@@ -62,7 +62,7 @@ namespace Alb.Controllers
                 }
             }
             
-            return CreatedAtAction("Get", new { id = created }, _albumsRepo.Find(created));
+            return CreatedAtAction("Get", new { id = created }, _albumRepo.Find(created));
         }
 
         [HttpPut("{id:int}")]
@@ -74,15 +74,15 @@ namespace Alb.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Json(_albumsRepo.Update(id, album));
+            return Json(_albumRepo.Update(id, album));
         }
 
         [HttpDelete("{id:int}")]
         [Produces("application/json")]
         public IActionResult Delete(int id)
         {
-            _albumsRepo.Delete(id);
-            var deleted = _albumsRepo.Find(id);
+            _albumRepo.Delete(id);
+            var deleted = _albumRepo.Find(id);
 
             if (deleted != null)
             {

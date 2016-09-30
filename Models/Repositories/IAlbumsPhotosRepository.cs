@@ -1,6 +1,7 @@
 namespace Alb.Models.Repositories
 {
-    public interface IAlbumsPhotosRepository : IResourceRepository<AlbumsPhotos>
+    public interface IAlbumsPhotosRepository
     {
+        int Create(AlbumsPhotos albumsPhotos);
     }
 }

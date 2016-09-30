@@ -17,7 +17,7 @@ namespace Alb.Models.Repositories
             _conn = connection.Conn;
         }
 
-        public int Create(Album album)
+        public int Create(CreateAlbum album)
         {
             var sql = @"
                 INSERT INTO albums (title) 

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
 using Alb.Database;
 using Microsoft.Extensions.Logging;
@@ -27,26 +25,6 @@ namespace Alb.Models.Repositories
 
             var id = _conn.Query<int>(sql, new { AlbumId = albumsPhotos.AlbumId, PhotoId = albumsPhotos.PhotoId }).First();
             return id;
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public AlbumsPhotos Find(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<AlbumsPhotos> FindAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public AlbumsPhotos Update(int id, AlbumsPhotos albumsPhotos)
-        {
-            throw new NotImplementedException();
         }
     }
 }
